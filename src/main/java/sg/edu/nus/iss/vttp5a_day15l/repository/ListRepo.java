@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.vttp5a_day15l.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,8 +13,8 @@ import sg.edu.nus.iss.vttp5a_day15l.utility.Util;
 public class ListRepo 
 {
     @Autowired
-    @Qualifier(Util.template02) // nothing wrong with usign diff tempalte 
-    RedisTemplate<String, Object> template;
+    @Qualifier(Util.template02) // nothing wrong with using diff tempalte 
+    RedisTemplate<String, Object> template; // object can be anything (?)
     
     // slide 30
     public void leftPush(String key, String value)
@@ -48,4 +50,25 @@ public class ListRepo
         return template.opsForList().size(key);
     }
 
+    public List<Object> getList(String key)
+    {
+        List<Object> list = template.opsForList().range(key, 0, -1); // end of the line
+
+        return list;
+    }
+
+    public Boolean deleteItem(String key, String valueToDelete)
+    {
+        Boolean isDeleted = false;
+
+        Long iFound = template.opsForList().indexOf(key, valueToDelete);
+
+        if (iFound >= 0)
+        {
+            template.opsForList().remove(key, 1, valueToDelete); // list key - person, valueToDelete is the content, using iFound in place of 1 is wrong?
+            isDeleted = true;   
+        }
+
+        return isDeleted;
+    }
 }

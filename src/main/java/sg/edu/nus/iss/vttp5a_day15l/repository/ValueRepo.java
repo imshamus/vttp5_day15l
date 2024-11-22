@@ -23,7 +23,7 @@ public class ValueRepo
         template.opsForValue().set(key, value);
 
         // setIfPresent
-        //setIfAbsent
+        // setIfAbsent
     }
     
     // Slide 25 - Retrieve a value
